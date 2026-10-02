@@ -1,0 +1,1769 @@
+---
+title: "Analyse des exploitations agricoles et de la sécurité alimentaire dans la région de l'Extrême-Nord du Cameroun"
+author: "Talekeudjeu Fampah Orel Brayan"
+date: "2026-06-21"
+output:
+  html_document:
+    theme: cosmo
+    highlight: tango
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    df_print: paged
+    number_sections: true
+    code_folding: hide
+    self_contained: true
+---
+
+```{r setuo css}
+```{css, echo=FALSE}
+/* ===== COULEURS & THÈME ===== */
+:root {
+  --primary: #1f77b4;
+  --secondary: #2c5aa0;
+  --accent: #ff7f0e;
+  --success: #2ca02c;
+  --warning: #d62728;
+  --light-bg: #f8f9fa;
+  --border-color: #e0e0e0;
+}
+
+/* ===== CORPS & POLICE ===== */
+body {
+  font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #333;
+  background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+  padding: 0;
+}
+
+.main-container {
+  background: white;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+  border-radius: 10px;
+}
+
+/* ===== EN-TÊTE ===== */
+h1 {
+  color: white;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  padding: 30px 40px;
+  margin: -40px -40px 40px -40px;
+  border-radius: 10px 10px 0 0;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  border-bottom: 4px solid var(--accent);
+}
+
+.subtitle {
+  font-size: 18px;
+  color: rgba(255,255,255,0.9);
+  margin: 10px 0 0 0;
+  font-weight: 300;
+}
+
+/* ===== TITRES ===== */
+h2 {
+  color: var(--secondary);
+  border-left: 5px solid var(--primary);
+  padding-left: 15px;
+  margin-top: 35px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+h3 {
+  color: var(--primary);
+  margin-top: 25px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+h4 {
+  color: #555;
+  margin-top: 18px;
+}
+
+/* ===== OBSERVATION BLOCKS ===== */
+.observation {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e8f4f8 100%);
+  border-left: 5px solid var(--primary);
+  padding: 18px 20px;
+  margin: 20px 0;
+  border-radius: 6px;
+  font-style: italic;
+  color: #1a3a52;
+  box-shadow: 0 2px 8px rgba(31, 119, 180, 0.1);
+}
+
+.observation::before {
+  content: "💡 ";
+  font-style: normal;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+/* ===== INSIGHT BLOCKS ===== */
+.insight {
+  background: linear-gradient(135deg, #fffbf0 0%, #fff8e8 100%);
+  border-left: 5px solid var(--accent);
+  padding: 18px 20px;
+  margin: 20px 0;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #8b5a0c;
+  box-shadow: 0 2px 8px rgba(255, 127, 14, 0.1);
+}
+
+.insight::before {
+  content: "⭐ ";
+  margin-right: 8px;
+}
+
+/* ===== WARNING BLOCKS ===== */
+.warning {
+  background: linear-gradient(135deg, #fff0f0 0%, #ffe8e8 100%);
+  border-left: 5px solid var(--warning);
+  padding: 18px 20px;
+  margin: 20px 0;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #8b1a1a;
+  box-shadow: 0 2px 8px rgba(214, 39, 40, 0.1);
+}
+
+.warning::before {
+  content: "⚠️ ";
+  margin-right: 8px;
+}
+
+/* ===== SUCCESS BLOCKS ===== */
+.success {
+  background: linear-gradient(135deg, #f0fff4 0%, #e8f9ee 100%);
+  border-left: 5px solid var(--success);
+  padding: 18px 20px;
+  margin: 20px 0;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #1a521a;
+  box-shadow: 0 2px 8px rgba(44, 160, 44, 0.1);
+}
+
+.success::before {
+  content: "✅ ";
+  margin-right: 8px;
+}
+
+/* ===== CARTES ===== */
+.card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 25px;
+  margin: 20px 0;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  border-color: var(--primary);
+}
+
+.card h4 {
+  margin-top: 0;
+  color: var(--primary);
+}
+
+/* ===== TABLEAU DES MÉTRIQUES ===== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 25px 0;
+}
+
+.metric-box {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  padding: 25px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(31, 119, 180, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.metric-box:hover {
+  transform: translateY(-5px);
+}
+
+.metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  display: block;
+  margin: 10px 0;
+  letter-spacing: -0.5px;
+}
+
+.metric-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  font-weight: 600;
+}
+
+/* ===== TABLEAUX ===== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+thead {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+}
+
+th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 14px;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+}
+
+tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+/* ===== CODE ===== */
+pre {
+  background: #282c34;
+  color: #abb2bf;
+  padding: 18px;
+  border-radius: 6px;
+  border-left: 4px solid var(--accent);
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+code {
+  font-family: 'Courier New', monospace;
+}
+
+/* ===== SECTION RÉSUMÉ ===== */
+.section-summary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 8px;
+  margin: 25px 0;
+  box-shadow: 0 6px 20px rgba(31, 119, 180, 0.25);
+}
+
+.section-summary h3 {
+  color: white;
+  margin-top: 15px;
+  border: none;
+}
+
+.section-summary h3:first-child {
+  margin-top: 0;
+}
+
+.section-summary ul {
+  margin: 10px 0;
+  padding-left: 25px;
+}
+
+.section-summary li {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+/* ===== TABLE OF CONTENTS ===== */
+#TOC {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e8f4f8 100%);
+  border-radius: 8px;
+  padding: 25px;
+  border-left: 4px solid var(--primary);
+  margin: 20px 0;
+  box-shadow: 0 4px 12px rgba(31, 119, 180, 0.1);
+}
+
+#TOC h2 {
+  color: var(--secondary);
+  border: none;
+  padding: 0;
+  margin: 0 0 15px 0;
+  font-size: 18px;
+}
+
+#TOC ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#TOC > ul > li {
+  margin: 8px 0;
+}
+
+#TOC a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#TOC a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* ===== PIEDS DE PAGE ===== */
+.footer {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid var(--border-color);
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+}
+
+/* ===== LIGNE HORIZONTALE ===== */
+hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(135deg, transparent 0%, var(--primary) 50%, transparent 100%);
+  margin: 40px 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+    padding: 20px;
+    margin: -20px -20px 30px -20px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  th, td {
+    padding: 10px;
+  }
+}
+
+/* ===== IMAGES ===== */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin: 20px 0;
+}
+
+/* ===== LISTES ===== */
+ul, ol {
+  margin: 15px 0;
+  padding-left: 30px;
+}
+
+li {
+  margin: 8px 0;
+  line-height: 1.8;
+}
+```
+
+
+
+```{r packages, include=FALSE}
+library(tidyverse)
+library(janitor)
+library(summarytools)
+library(skimr)
+```
+
+# Introduction
+  Ce projet s'inscrit dans le cadre du *Bootcamp en Analyse de données et initiation a la Data science avec R*. 
+  
+  L'agriculture constitue l'une des principales activités économiques dans la région de l'Extrême-Nord du Cameroun. Cependant, la variabilité climatique, les conditions socio-économiques des ménages et les pratiques agricoles influencent fortement les rendements ainsi que la sécurité alimentaire.
+  Dans ce contexte, il devient essentiel d'identifier les facteurs susceptibles d'améliorer le rendement agricole et de réduire la vulnérabilité alimentaire des ménages.
+  
+  L'objectif est de nettoyer, explorer et analyser les données afin d'identifier *les facteurs influençant le rendement argricole et la sécurité alimentaire des ménages*.
+  Les analyses seront réalisées sous R en appliquant les principales étapes d'un projet de Data science: préparation des données, visualisation, statistiques descriptives, modelisation et interprétations des résultats.
+  
+# 1. Importation de la base 
+
+```{r Import_base}
+library(readr)
+data <- read.csv("agriculture_ExtremeNord_brut.csv")
+# convertissons la base en tibble
+data <- as_tibble(data)
+```
+
+# 2. Diagnostic de la base
+
+## 2.1. Visualisation générale
+
+```{r Diagnos_base}
+summary(data)
+str(data)
+```
+
+
+```{r Vue_général_base}
+skim(data)
+glimpse(data)
+```
+
+*Obseration : *
+  La base de données comprend 2 215 observations réparties sur 35 variables, dont 21 quantitatives et 14 qualitatives. Cette structure est suffisamment riche pour conduire des analyses descriptives, inférentielles et prédictives. L'examen préliminaire met également en évidence la présence d'espaces dans certains noms de variables, ce qui pourrait compliquer certaines manipulations sous R et devra être corrigé lors du nettoyage.
+
+```{r Valeurs_Manquantes}
+missing_summary <- tibble(
+  Variable = names(data),
+  Valeurs_Manquantes = colSums(is.na(data)),
+  Pourcentage_NA = round(colSums(is.na(data)) / nrow(data) * 100, 2)
+) %>%
+  filter(Valeurs_Manquantes > 0) %>%
+  arrange(desc(Pourcentage_NA))
+
+print(missing_summary)
+```
+
+*Obseration : *
+ Des valeurs manquantes sont observées sur plusieurs variables quantitatives, notamment _superficie_ha_ , _engrais_kg_ , _revenu_net_kFCFA _ , _score_securite_alimentaire_ , _age_exploitant_ ,  _pluviometrie_mm_ , _rendement_kg_ha_. Avant toute analyse statistique, ces valeurs devront être traitées afin d'éviter des biais dans les estimations et de garantir la validité des résultats. 
+## 2.3. Vérification des doublons
+
+```{r Observation_doublons}
+doublons <- data %>%
+  count(id) %>%
+  filter(n > 1)
+doublons
+sum(duplicated(data))
+```
+
+*Obseration : *
+ Cett base de données ne possede pas de doublons, ni de ligne dupliquer.
+
+
+## 2.4. Vérification des valeurs aberrantes.
+
+```{r Analyse_Des_Valeurs_Aberantes_(Numeriques)}
+data %>%
+  select(where(is.numeric)) %>%
+  names() %>%
+  walk(~{
+    cat("\n--- Variable: ", .x, " ---\n", sep = "")
+    
+    stats <- data %>%
+      pull(.x) %>%
+      summary()
+    
+    print(stats)
+    
+    # Détecte les valeurs négatives
+    neg_count <- sum(data[[.x]] < 0, na.rm = TRUE)
+    if (neg_count > 0) {
+      cat("⚠️  ", neg_count, " valeur(s) NÉGATIVE(S) détectée(s)\n", sep = "")
+    }
+  })
+```
+
+*Obseration : *
+Des valeurs qui porront nuire aux études sont presente dans cette base (valeurs aberantes).
+
+
+```{r visual_modal_inco_var_cate}
+data %>%
+    select(where(is.character)) %>%
+    names() %>%
+    walk( ~{
+      data %>%
+        count(.data[[.x]], sort = T, name = "n") %>%
+        print(n = Inf)
+    })
+```
+
+*Observation :*
+Nous remarquons des modalités incohérentes sur les variables
+- Modalités incohérentes sur les variables numeriques : _age_exploitant_(valeur negatif) , _superficie_ha_(valeur negatif) , _rendement_kg_ha_(valeur negatif), _revenu_net_k_fcfa_ (valeur negatif),    ;
+- Modalités incohérentes sur les variables categorielles : _saison_ , _sexe_  
+- Valeurs aberantes sur les variables : _rendement_kg_ha_ 
+
+## 2.5. Synthèse des problemes indentifier
+
+D'après notre diagnostic nous avons récaputiler le tableau suivant : 
+
+| Problème               | Impact                  | Action        |
+| ---------------------- | ----------------------- | ------------- |
+| Espaces                | erreurs de manipulation | suppression   |
+| Valeurs manquantes     | biais                   | imputation    |
+| Valeurs aberrantes     | modèles instables       | correction    |
+| Modalités incohérentes | mauvais regroupement    | harmonisation |
+
+
+
+# 3. Nettoyage de la base
+
+```{r initialisation de la base}
+data_net_1 <- data
+```
+
+  Nous allons pour cette étape nettoyer notre base _data_net_ en se concentrant sur les problemes indaentifier dans le diagnostic.
+  
+
+## 3.1. Nettoyage des espaces sur les noms des colonnes
+
+
+```{r Net_Esp_Nom_Col}
+data_net_1 <- data_net_1 %>%
+  janitor::clean_names()
+```
+
+*Nettoyage 1 :*
+
+Nous avons changer les variables en minuscules et remplacer les espaces par des underscores.
+
+## 3.2. Nettoyage des espaces en début/fin des modalités
+
+```{r Net_Esp_D/F}
+data_net_2 <- data_net_1 %>%
+  mutate(across(where(is.character), ~str_trim(.x))) %>% # pour enlever espaces
+  mutate(across(where(is.character), ~str_to_lower(.x)))
+  
+```
+
+*Nettoyage 2 :*
+
+Nous avons reglé les espaces au debut/fin et uniformiser les cases.
+
+## 3.3. Nettoyage des modalités incoherentes
+
+
+```{r Net_Har_Categorielle }
+data_net_3 <- data_net_2 %>%
+  mutate( 
+    # Harmonisation de saison
+    saison = case_when(
+    saison %in% c("saison seche", "sec", "seche", "saison sèche") ~ "saison seche",
+    saison %in% c("saison des pluies","pluies", "saison_pluies") ~ "saison des pluies",
+    TRUE ~ saison
+    ),
+    
+    # Harmonisation de sexe
+    sexe = case_when(
+      sexe %in% c("m", "masculin", "homme", "homm") ~ "masculin",
+      sexe %in% c("f", "femme") ~ "feminin",
+      TRUE ~ sexe
+    )
+    )
+```
+
+
+```{r Net_Har_Numeric}
+
+data_net_3 <- data_net_3 %>%
+  mutate(
+    age_exploitant = ifelse(age_exploitant < 0, NA, age_exploitant),
+    superficie_ha = ifelse(superficie_ha < 0, NA, superficie_ha),
+    rendement_kg_ha = ifelse(rendement_kg_ha < 0, NA, rendement_kg_ha),
+    revenu_net_k_fcfa = ifelse(revenu_net_k_fcfa < 0 , NA, revenu_net_k_fcfa)
+  )
+
+```
+
+*Nettoyage 3 :*
+
+Nous avons harmonisé le sexe et saison puis remplacer les valeur négative des variables age_exploitant ,  superficie_ha, rendement_kg_ha et revenu_net_k_FCFA
+
+## 3.4. Nettoyage valeurs aberantes
+
+```{r Net_Val_Abe}
+Q3 <- quantile(data_net_3$rendement_kg_ha, 0.75, na.rm = T)
+IQR_val <- IQR(data_net_3$rendement_kg_ha, na.rm = T)
+seuil <- Q3 + 1.5*IQR_val
+data_net_4 <- data_net_3 %>%
+  mutate(
+    rendement_kg_ha = ifelse(rendement_kg_ha > seuil, NA, rendement_kg_ha)
+  )
+```
+
+*Nettoyage 4 :*
+ 
+ Nous avons selon le diagnostic une seule variables qui presentait une valeurs aberante : _rendement_kg_ha_.
+ Nous avons utilisé la regle IQR(Q3 + 1.5*IQR) pour identifier les rendements aberrants.
+ 
+## 3.5. Nettoyage des valeus manquantes
+
+```{r Net_Val_Manq}
+data_net_5 <- data_net_4 %>%
+  mutate(
+    age_exploitant = replace_na(age_exploitant, median(age_exploitant, na.rm = T)),
+    superficie_ha = replace_na(superficie_ha, median(superficie_ha, na.rm = T)),
+    engrais_kg = replace_na(engrais_kg, median(engrais_kg, na.rm = T)),
+    pluviometrie_mm = replace_na(pluviometrie_mm, median(pluviometrie_mm, na.rm = T)),
+    rendement_kg_ha = replace_na(rendement_kg_ha, median(rendement_kg_ha, na.rm = T)),
+    revenu_net_k_fcfa  = replace_na(revenu_net_k_fcfa , median(revenu_net_k_fcfa , na.rm = T)),
+    score_securite_alimentaire = replace_na(score_securite_alimentaire, median(score_securite_alimentaire, na.rm = T)),
+  )
+```
+
+```{r Veri_Val_Manq}
+print(colSums(is.na(data_net_5)))
+```
+
+*Nettoyage 5 :*
+  Les variables quantitatives ont été imputées par la medine, celle-ci étant robuste aux valeurs extrêmes.
+  
+## 3.6. Vérification final du nettoyage
+
+```{r Base_final}
+data_clean <- data_net_5
+```
+
+```{r Vérif_base_final}
+print(dim(data_clean))
+print(str(data_clean))
+summary(data_clean)
+```
+
+
+
+*Observation final :*
+ Apres vérification finale, notre nouvelle base _data_clean_ possede 2215 observation et 35 variables. Aucune valeurs manquantes et aberantes. les modalités sont coherentes.
+ Nous pouvons proceder a l'analyse exploratoire de nos données.
+
+```{r Sauvegarde_Base_nettoyée}
+write_csv(data_clean, "agriculture_ExtremeNord_propre.csv")
+
+```
+
+
+# 4. Analyse exploratoire
+
+  Dans cette partie nous allons exploré nos données en les visualisant, nous insisterons plus sur le rendement par culture ; le rendement par département et sexe ; la pluviométrie vs rendement ; la prévalence de la vulnérabilité par département ; le rendement moyen (département × culture) ; l’évolution du revenu net par culture. Nous allons egalement etudier chaque variables et effectuer quelques testes tels que : Test de normalité de Shapiro-Wilk , Test de Wilcoxon, Test de Kruskal-Wallis et Test du Chi-deux.
+  
+  
+## 4.1. Visualisation des données
+
+### 4.1.1. Rendement par culture
+
+```{r Visua_rendement_culture}
+# Visualisation
+data_clean %>%
+  ggplot(aes(x = reorder(culture_principale, rendement_kg_ha, FUN = median), y = rendement_kg_ha, fill = culture_principale)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.2, alpha = 0.3) + 
+  labs(title = "Distribution du rendement selon la culture", 
+       x = "Culture", y = "Rendement (kg/ha)" ) +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# Resumé
+data_clean %>%
+  group_by(culture_principale) %>%
+  summarise(
+    Moyenne = mean(rendement_kg_ha),
+    mediane = median(rendement_kg_ha),
+    Ecart_type = sd(rendement_kg_ha) %>%
+  print()
+  )
+```
+*Interprétation :*
+
+  L'analyse croisée du boxplot et des statistiques descriptives révèle de fortes disparités de productivité selon les cultures dans l'Extrême-Nord : 
+  - Filières performantes (Coton et Mais ): Le coton enregistre le meilleur rendement moyen(1119,02 kg/ha), suivi du mais(1056,45 kg/ha). Le coton bénéficie d'une distribution équilibrée grâce a l'encadrement de sa filière(intrants, encadrement technique). Le mais montre une forte hétérogénéité (Ecart-type = 381,57), signe d'un accès inégal aux zones irriguées ou aux engrais.
+  - Cultures intermédiares (Arachide et Niébé) : Elles affichent des rendements stables et homogènes, gravitant autout de 901,93 kg/ha pour l'arachide et 813,71 kg/ha pour le niébé.
+  -Cultures de subisistances (Sorgho, Mil et Sésame) : Le sorgho (668,15 kg/ha) et le mil (619,62 kg/ha) affichent les rendement les plus faibles mais les distributions les plus resserés. Bien que peu productifs a l'hectare, ils restent indispensables car très réilients face aux chocs climatiques sahéliens.
+
+  Les fortes variations d'écart-type et de formes de boîtes valident l'utilisation du test non-parométrique de kruskal-Wallis pour la comparaison des moyennes.
+
+
+### 4.1.2. Rendement par departement et sexe
+
+```{r Visua_Rendement_depart_sexe}
+data_clean %>%
+  ggplot(aes(x = departement, y = rendement_kg_ha, fill = sexe)) +
+  geom_boxplot(alpha = 0.7, position = "dodge") +
+  labs(title = "Rendement par departement et sexe",
+         x = "Département", y = "Rendement (kg/ha)" ) + 
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+*Interprétation :*
+
+  Le graphique en boîte a moustaches croisant le rendement avec le département et le sexe des exploitants révèle une structure de production particulèrement homogène a l'échelle régionale : 
+  - Equité des rendements selon le sexe : dans la quasi-totalité des départements, les médianes et les distributions des rendements entre les hommes et les femmes sont quasi identiques. Il n'apparaît pas de disparité visuelle majeure liée au genre sur la productivité brute a l'hectare.
+  - Stabilité inter-département : les niveaux de rendement restent globalement similaires d'un département a un autre, se concentrant majoritairement entre 500 et 1000 kg/ha. Le Logone-et-Chari affiche une dispersion légèrement plus basse pour les deux sexes.
+  - Présence de valeurs atypique(Outliers) : On observe de nombreuses valeurs supérieures atypiques(points isolés s'étendant jusqu'a plus de 1500 kg/ha) dans tous les départements, peu importe le sexe. Elles représentent des exploitations performantes(sûrement dotées d'un meilleur accès aux intrants ou a l'irrigation).
+  
+  L'alignement presque parfait des boîtes suggère que le test de Wilcoxon pourrait conclure a une absence de différence statistiquement significative entre le rendement des hommes et des femmes sur l'ensemble de l'échantillon. 
+
+### 4.1.3. Pluviometrie vs rendement
+
+```{r Visua_Pluvio_Vs_Rendement}
+
+data_clean %>%
+  ggplot(aes(x = pluviometrie_mm, y = rendement_kg_ha, color = saison)) +
+  geom_point(alpha = 0.5, size = 2) + 
+  geom_smooth(method = "lm", se = T, alpha = 0.2) +
+  labs( title = "Pluviométrie Vs Rendement",
+        x= "Pluviométrie (mm)", y = "Rendement (kg/ha)"
+        ) +
+  theme_minimal()
+cor_val <-  cor(data_clean$pluviometrie_mm, data_clean$rendement_kg_ha)
+cat("Corrélations:", round(cor_val,3), "\n")
+```
+
+*Interprétation :*
+
+  Le nuage de points combiné aux droites de régression lineaire permet d'analyser l'impact des précipitations sur la productivité agricole selon la saison : 
+  - Séparation nette des saisons : le graphique montre deux clusters distincts de données, la saison seche regroupe des cumuls pluviométriques faibles(inférieurs a 500 mm), tandis que la saison des pluies seconcentre sur des précipitations plus intenses(généralement comprises entre 500 et  1100 mm).
+  - Absence de corrélation linéaire globale : le coefficient de corrélation calculé est extrêmement proche de zéro(-0.01). Visuellement, les droites de tendance pour chaque saison sont parfaitement horizontales et plates. Cela indique que, dans les intervalles observés, les variations de la pluviométrie n'induisent aucune hausse ou baisse linéaire directe du rendement global.
+  - Forte variabilité intra-saisonnière : pour un même niveau de précipitations(par exemple a 300 mm ou a 800 mm), les rendements restent très dispersés, oscillant de moins de 500 kg/ha a plus de 1500 kg/ha.
+  
+
+### 4.1.4. Prévalence de la vulnérabilité par département
+
+```{r Visua_Préval_Vulné_par_départ}
+
+seuil_vul <- median(data_clean$score_securite_alimentaire)
+
+data_clean <- data_clean %>%
+  mutate(vulnerable = ifelse(score_securite_alimentaire < seuil_vul, "vulnérable", "non vulnérable"))
+
+data_clean %>%
+  count(departement, vulnerable) %>%
+  group_by(departement) %>%
+  mutate(prop = n / sum(n) * 100) %>%
+  filter(vulnerable == "vulnérable") %>%
+  ggplot(aes(x = reorder(departement, -prop), y = prop, fill = departement)) + 
+  geom_col(alpha = 0.7) +
+  geom_text(aes(label = paste0(round(prop, 1), "%")), vjust = -0.5) + 
+  labs(title = "Prévalence de vulnérabilité par département",
+       x = "Département", y = "Proportion (%)")+
+  theme_minimal() + theme(legend.position = "none")
+```
+
+*Interprétation :*
+
+  Le graphique a barres présente la proportion de ménages considérés comme "vulnérable" au sein de chaque département, définie a partir du seuil médian du score de sécurité alimentaire : 
+  - Homogénéité de la vulnérabilité régionale : la prévalence de la vulnérabilité alimentaire oscille dans une fourchette très étroite a l'echelle de la région, allant de 37,4% a 41,4%. Tous les départements font face a un niveau d'insécurité alimentaire structurellement proche et préoccupant.
+  - Classement des départements : le Mayo-kani affiche le taux de vulnérabilité le plus élevé de l'échantillon (41,5 %), suivi de très près par le Diamaré (41%) et le Mayo-Sava(40%). Le logone-et-Chari(38,1%) et le Mayo-Danay(37,4?%) ferment la marcheavec des taux légèrement inférieurs.
+  
+Les écarts entre les pourcentages étants minimes d'un territoire a l'autre, il est fort probables que le futur test d'indépendance du Chi-deux ou les modèles logistiques révèlent une association statistique faible ou non significative entre le département seul et le statut de vulnérabilité, indiquant que ce problème touche uniformément la région.
+
+### 4.1.5. Rendement moyen (département * culture)
+
+```{r Visua_Rend_Moy_Depart_Culture}
+data_clean %>%
+  group_by(departement, culture_principale) %>%
+  summarise(rdt_moy = mean(rendement_kg_ha), .groups = "drop") %>%
+  ggplot(aes(x = departement, y = rdt_moy, fill = culture_principale)) +
+  geom_col(position = "dodge", alpha = 0.7) +
+  labs (title = "Rendement moyen (Département * Culture)",
+        x = "Département", y = "Rendement (kg/ha)") + 
+  theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+
+*Interprétation :*
+
+  Le diagramme a barres juxtaposées permet d'analyser la productivité croisée des différentes cultures au sein de chaque département de la région : 
+  - Hiérarchie identique des cultures partout : la structure des rendements reste parfaitement stable d'un térritoire a l'autre. Quelque soit le département, le coton et le mais dominent systématiquement la production avec les barres les plus hautes(dépassant généralement 1000 kg/ha), suivis de l'arachide et du niébé. A l'inverse, le mil, le sésame et le sorgho ferment toujours la marche avec les rendements plus faibles.
+  - Spécificité géographiques mineures :
+    * Le Logone-et-Chari se distingue par le rendement moyen en coton le plus élevé de la       région(approchant les 1250 kg/ha)
+    * Les autres départements présentent des profils de récolte quasi superposables pour        toutes les spéculations.
+
+  Cette forte régularité visuelle indique u effet d'interaction faible ou nul entre le département et le type de culture. Le type de culture reste le facteur prédominant pour expliquer le rendement.
+
+### 4.1.6. Evolution du revenu net par culture
+
+```{r Visual_Evol_Revenu_net_par_culture}
+data_clean %>%
+  group_by(culture_principale, annee) %>%
+  summarise(revenu_moy = mean(revenu_net_k_fcfa), .groups = "drop" ) %>%
+  ggplot(aes(x = annee, y = revenu_moy, color = culture_principale)) + 
+  geom_line(linewidth = 1) + 
+  geom_point(size = 3) +
+  labs(title = "Evolution du revenu net moyen par culture",
+       x = "Année", y = "Revenu net (k FCFA") + 
+  theme_minimal()
+```
+
+*Interprétation :*
+
+  Le graphique linéaire met en évidens=ce la dynamique temporelle des revenus nets moyens(en milliers de FCFA) générés par chaque culture entre 2021 et 2024 : 
+  - Filières a forte volatilité (Coton et Niébé) : 
+    * Le coton enregistre une forte hausse jusqu'a un pic en 2022(proche de 680 k FCFA), avant de chutter lourdement en 2023 et de rebondire en 2024.
+    * Le niébé affiche une tendance inverse avec une progression remarquable     jusqu'a un pic majeur en 2023(environ 650 k FCFA), avant de redescendre      en 2024.Ces fluctuations reflètent la sensibilité de ces cultures de rente aux variations des prix du marché ou aux aléas climatiques annuels.
+  - Stabilité des cultures vivrières (Arachide, Mais et Sésame) :  Ces cultures oscillent de manière très stable et linéaire dans une fouchette intermédiaire , cmomprise entre 350 k et 500 k FCFA tout au long de la période. L'arachide montre la trajectoire la plusconstante.
+  - Cultures a faible rentabilité économique (Mil et Sorgho) : Le mil et le sorgho ferment systématiquement la marche avec des revenus nets stagnants et très faibles, se maintenant sous la barre de 250 k FCFA. Bien qu'essentiels très peu de surplus monétaires pour les ménages.
+  
+  L'évolution temporelle non linéaire de certaines cultures montre que l'annéee de collecte (annee) et son interaction avec le type de culture pourraient représenter des variables explicatives importantes a intégrer dans tes modèles prédictis
+
+
+## 4.2. Statistique descriptive
+
+### 4.2.1. Statistique descriptive des variables quantitatives
+
+```{r Stats_descrip_quanti}
+
+data_clean %>%
+  select(where(is.numeric)) %>%
+  pivot_longer(everything()) %>%
+  group_by(name) %>%
+  summarise(
+    N = n(),
+    Moyenne = round(mean(value), 2),
+    Ecart_type = round(sd(value), 2),
+    Médiane = round(median(value), 2),
+    Min = round(min(value), 2),
+    Max = round(max(value), 2),
+    .groups = "drop"
+  )
+
+```
+
+*Interprétation :*
+
+  Le tableau descriptif global permet de synthétiser le comportement des principales variables quantitatives de notre échantillon. Trois indicateurs clés se distinguent par leur impact structurel :
+  
+  - Rendement : Le rendement agricole moyen dans la région se situe à 818,58 kg/ha avec une valeur médiane
+de 720,2 kg/ha. L'écart-type élevé de 311,74 kg/ha (pour un minimum de 0 et un maximum de 1 779 kg/ha) indique une hétérogénéité modérée à forte de la productivité entre les exploitations, traduisant des   disparités dans l'accès aux intrants ou des chocs locaux de production.
+  
+  - Dispersions importantes et inégalités économiques sur revenu net : Le revenu net moyen s'établit à 369,70 k FCFA, mais cache de profondes inégalités économiques. L'écart-type de 392,26 k FCFA est supérieur à la moyenne elle-même, et l'écart entre le revenu minimal (11 k FCFA) et maximal (7 732 k FCFA) est abyssal. Cette dispersion extrême montre une forte concentration de la richesse chez une minorité de producteurs (sans doute ceux des filières de rente) face à une majorité de ménages à très faible capital monétaire.
+  
+  - Pluviométrie  : Le cumul des précipitations enregistre une moyenne de 550,72 mm. Cependant, son écart-type très prononcé de 263,58 mm (avec des extrêmes allant de 88,1 mm à 1 187,10 mm) confirme une instabilité climatique majeure au sein de la zone sahélienne de l'Extrême-Nord. Cette forte fluctuation interannuelle et spatiale représente un facteur de risque crucial pour la stabilité des rendements et la sécurité alimentaire des ménages.
+
+
+### 4.2.2. Statistique descriptive des variables qualitatives
+
+```{r Stats_descrip_quali}
+
+print(data_clean %>%
+        count(saison) %>%
+        mutate(
+          Pct = round(n/sum(n)*100, 1)
+        ))
+
+print(data_clean %>%
+        count(sexe) %>%
+        mutate(
+          Pct = round(n/sum(n)*100, 1)
+        ))
+
+print(data_clean %>%
+        count(departement) %>%
+        mutate(
+          Pct = round(n/sum(n)*100, 1)
+        ))
+
+print(data_clean %>%
+        count(culture_principale) %>%
+        mutate(
+          Pct = round(n/sum(n)*100, 1)
+        ))
+
+cat("\n Contingence Sexe * Accès Crédit : \n")
+print(table(data_clean$sexe, data_clean$acces_credit))
+```
+
+*Interprétation :*
+
+  L'analyse des fréquences des variables catégorielles permet de dresser le profil structurel et institutionnel de notre échantillon :
+  
+  - Sexe : La base de données montre une nette prédominance masculine parmi les chefs d'exploitation interrogés, avec 71,4 % d'hommes (1 582 individus) contre 28,6 % de femmes (633 individus). Ce ratio reflète les barrières structurelles ou coutumières liées à l'accès direct au statut formel de chef d'exploitation pour les femmes dans la région.
+  
+  - Département : La répartition géographique des données est parfaitement équilibrée à travers l'Extrême-Nord. Chacun des 5 départements (Diamaré, Logone-et-Chari, Mayo-Danay, Mayo-Kani, Mayo-Sava) représente environ 20 % de l'échantillon total. Cette distribution spatiale homogène garantit la représentativité territoriale de nos conclusions à l'échelle régionale.
+  
+  - Accès au crédit × Sexe : La table de contingence révèle de profondes inégalités de genre face aux services financiers :
+  
+    * Seules 32,7 % des femmes de l'échantillon ont pu obtenir un crédit (207 "oui" sur 633).
+    
+    * Chez les hommes, ce taux tombe à 29,6 % (468 "oui" sur 1 582).
+    
+    * Bien que la proportion de bénéficiaires soit légèrement supérieure chez les femmes interrogées, le
+    volume global d'accès reste globalement faible (moins d'un tiers de l'échantillon, quel que soit le
+    genre), traduisant un rationnement généralisé du crédit agricole.
+
+  La forte asymétrie de la variable sexe devra être prise en compte lors de l'évaluation des tests 
+  comparatifs. Le croisement sexe × acces_credit fera l'objet d'un test du Chi-deux (section 4.2.6) pour 
+  déterminer si cette faible différence de proportion est statistiquement significative.
+
+## 4.3. Test 
+
+  Les analyses exploratoire ont permis de mettre en évidence plusieurs différences potentielles entre groupes. Afin de déterminer si ces diférences sont statistiquement significatives, des tests inférentiels adaptés a la nature des variables et au respect des hypothèses statistiques sont réalisés.
+  
+### 4.2.3. Test de la normalité de Shapiro-Wilk
+
+```{r Test_Shapiro_wilk}
+
+vars_normality <- c("rendement_kg_ha", "revenu_net_k_fcfa", "pluviometrie_mm")
+
+resultats_shapiro <- map_df(vars_normality, ~{
+  test <- shapiro.test(data_clean[[.x]])
+  tibble(
+    variable = .x,
+    Statistique_W = round(test$statistic, 4),
+    P_valeur = round(test$p.value, 4),
+    Normal = ifelse(test$p.value > 0.05, "Oui", "Non")
+  )
+})
+print(resultats_shapiro)
+
+```
+
+*Interprétation des résultats :*
+
+  L'hypothèse nulle ($H_0$) du test stipule que la variable suit une loi normale. Si la p-valeur est inférieure au seuil critique de 5 % (0,05), on rejette $H_0$. Le tableau de résultats indique les métriques suivantes : 
+  
+  - Rendement : Statistique_W = 0,9305 ; p-valeur = 0. La distribution n'est pas normale.  
+  
+  -Revenu net  : Statistique_W = 0,6335 ; p-valeur = 0. La distribution s'écarte très sévèrement d'une loi normale (ce qui corrobore la présence de fortes inégalités et l'asymétrie observée précédemment).  
+  
+  -Pluviométrie  : Statistique_W = 0,9183 ; p-valeur = 0. La distribution n'est pas normale.  
+  
+ Les trois p-valeurs étant strictement inférieures à 0,05, l'hypothèse de normalité est catégoriquement rejetée pour toutes ces variables. Ce constat valide définitivement le recours à des tests non paramétriques (Wilcoxon et Kruskal-Wallis) pour les étapes suivantes de notre analyse descriptive comparative.  
+
+
+### 4.2.4. Test de Wilcoxon : rendement Homme vs Femme
+
+  Nous allons procédé au test de Wilcoxon-Mann-Whitney car :
+  
+  - La section précédente (4.2.3) a démontré de manière catégorique que la variable du rendement (rendement_kg_ha) ne suit pas une loi normale. Le test de Student (t-test), qui est paramétrique, est donc mathématiquement invalidé.  
+  
+  - De plus Nous comparons une variable quantitative (le rendement) entre deux groupes indépendants définis par une variable qualitative binaire (le sexe : Homme vs Femme).Contrairement au test t qui compare les moyennes, le test de Wilcoxon compare la distribution globale et les rangs (ou médianes). 
+  
+```{r Test_Wilcoxon}
+
+rdt_hommes <- data_clean %>%
+  filter(sexe == "masculin") %>%
+  pull(rendement_kg_ha)
+
+rdt_femmes <- data_clean %>%
+  filter(sexe == "feminin") %>%
+  pull(rendement_kg_ha)
+
+test_wilcox <- wilcox.test(rdt_hommes, rdt_femmes)
+
+if (test_wilcox$p.value < 0.05) {
+  cat("Différence Significative \n")
+} else {
+  cat("Pas de différence significative \n")
+}
+
+# Graphique
+
+data_clean %>%
+  ggplot(aes(x = sexe, y = rendement_kg_ha, fill = sexe)) +
+  geom_boxplot(alpha = 0.6) +
+  labs(title = "Rendement : Hommes Vs Femmes", 
+       subtitle = paste("Wilcoxon p =", round(test_wilcox$p.value, 4))) +
+  theme_minimal()
+
+```
+
+*Interprétation des résultats :*
+
+  L'hypothèse nulle ($H_0$) stipule qu'il n'y a pas de différence systématique entre les rendements des hommes et des femmes. 
+  D'après le graphique de la boîte à moustaches  :
+  
+  - La p-valeur calculée est de 0,028 (affichée en sous-titre Wilcoxon p = 0.028).
+  
+  - Décision statistique : La p-valeur étant inférieure au seuil critique de 5 % (0,028 < 0,05), on rejette l'hypothèse nulle $H_0$. La différence observée est statistiquement significative.
+  
+  - L'observation fine des boxplots montre que la ligne médiane du groupe des femmes (feminin) est légèrement supérieure à celle des hommes (masculin). De plus, la dispersion supérieure et la présence de valeurs aberrantes élevées chez les hommes étirent la distribution, mais la distribution centrale penche en faveur d'une efficacité productive légèrement plus élevée chez les femmes sur leurs parcelles respectives.
+  
+  Bien que les femmes soient minoritaires dans l'échantillon, elles obtiennent des performances de rendement statistiquement distinctes (et légèrement supérieures en tendance centrale) à celles des hommes. Cela souligne l'importance d'appuyer les femmes actrices du secteur agricole pour maximiser la sécurité alimentaire régionale.
+
+
+
+### 4.2.5. Test de Kruskal-Wallis : rendement selon le département
+
+```{r Test_Kruskal_Wallis}
+
+test_kruskal <- kruskal.test(rendement_kg_ha ~ departement, data = data_clean)
+
+if (test_kruskal$p.value < 0.05) {
+  cat("Rendement différent significativement par département \n")
+} else {
+  cat("Pas de différence significative \n")
+}
+
+# Stats par département
+
+data_clean %>%
+  group_by(departement) %>%
+  summarise(
+    N = n(),
+    Rendement_moyen = round(mean(rendement_kg_ha), 2),
+    Médiane = round(median(rendement_kg_ha), 2)
+  ) %>%
+  print()
+
+# Graphique
+
+data_clean %>%
+  ggplot(aes(x = departement, y = rendement_kg_ha, fill = departement)) +
+  geom_boxplot(alpha = 0.6) +
+  labs(title = "Rendement par département",
+       subtitle = paste("Kruskal-Wallis p = ", round(test_kruskal$p.value, 4))) +
+  theme_minimal() + theme(legend.position = "none")
+```
+
+
+
+### 4.2.6. Test du Chi-deux : accès au crédit * vulnérabilité alimentaire
+
+  Le test du Chi-deux d'indépendance est le test de référence incontournable ici pour une raison méthodologique simple :
+  
+  - Contrairement aux sections précédentes qui comparaient une variable quantitative à une variable qualitative, nous cherchons ici à analyser la relation entre deux variables strictement qualitatives et catégorielles : l'accès au crédit et le statut de vulnérabilité du ménage. On ne peut utiliser ni un test de Wilcoxon, ni un Kruskal-Wallis, ni un test t sur des proportions brutes. Le test du Chi-deux permet de comparer mathématiquement les effectifs observés dans notre table de contingence aux effectifs théoriques attendus sous l'hypothèse d'une indépendance totale, afin de déterminer si ces deux dimensions s'influencent mutuellement.
+
+```{r Test_Chi_deux}
+contingence <- table(data_clean$acces_credit, data_clean$vulnerable)
+test_chi2 <- chisq.test(contingence)
+
+print(contingence)
+
+if(test_chi2$p.value < 0.05 ) {
+  cat("Accès crédit et vulnérabilité sont liés \n")
+} else {
+  cat(" Pas de relation significative \n")
+}
+
+# Graphique
+
+data_clean %>%
+  count(acces_credit, vulnerable) %>%
+  group_by(acces_credit) %>%
+  mutate(prop = n/ sum(n)*100) %>%
+  ggplot(aes(x = acces_credit, y = prop, fill = vulnerable))+
+  geom_col(position = "dodge", alpha = 0.7) +
+  geom_text(aes(label = paste0(round(prop, 1), "%")),
+            position = position_dodge(width = 0.9), vjust = -0.5) +
+  labs(title = "Accès crédit * Vulnérabilité",
+       subtitle = paste("Chi-deux p =", round(test_chi2$p.value, 4))) +
+  theme_minimal()
+```
+
+*Interprétation des résultats :*
+
+  L'hypothèse nulle ($H_0$) stipule que l'accès au crédit et le statut de vulnérabilité sont totalement indépendants (le fait d'obtenir un financement n'influence pas et n'est pas influencé par le niveau de vulnérabilité du ménage).
+  D'après le graphique en barres juxtaposées :
+  
+  - La p-valeur obtenue est de 0,1502 (affichée en haut du graphique Chi-deux p = 0.1502).
+  
+  - Décision statistique : La p-valeur étant supérieure au seuil critique de 5 % (0,1502 > 0,05), on ne peut pas rejeter l'hypothèse nulle $H_0$. La relation entre l'accès au crédit et la vulnérabilité n'est pas statistiquement significative.
+  
+  - Analyse visuelle des proportions :
+  
+    * Chez les ménages sans accès au crédit (non), 38,6 % sont jugés vulnérables contre 61,4 % non vulnérables.
+    
+    * Chez les ménages ayant accès au crédit (oui), la proportion de personnes vulnérables grimpe légèrement à 41,9 % (contre 58,1 % non vulnérables).
+    
+    * Bien qu'on observe visuellement un très léger écart de proportions (~3,3 % d'écart), le test du Chi-deux démontre que cette fluctuation est trop faible au regard de la taille de l'échantillon pour être attribuée à un véritable lien de cause à effet. Elle relève purement du hasard de l'échantillonnage.
+    
+  L'accès au crédit n'apparaît pas corrélé de façon significative à l'état de vulnérabilité des producteurs dans notre zone d'étude. Cela peut traduire le fait que le crédit agricole est soit alloué de manière uniforme sans ciblage spécifique, soit que ses effets n'ont pas encore modifié structurellement le profil de vulnérabilité économique à court terme.
+
+# 5. Regression et modelisation
+
+### 5.1. Prédiction du rendement (Régression linéaire multiple)
+
+#### 5.1.1. Construction du modèle
+
+  Pour identifier et quantifier les déterminants structurels du rendement agricole dans la région, nous allons estimé un modèle de régression linéaire par la méthode des Moindres Carrés Ordinaires (MCO). La variable dépendante est le rendement (rendement_kg_ha).
+
+```{r Regression_lineaire}
+# modele pour prédire le rendement
+modele_lin <- lm(
+  rendement_kg_ha ~ pluviometrie_mm + superficie_ha + engrais_kg + sexe +
+    age_exploitant + departement,
+  data = data_clean
+)
+
+summary(modele_lin)
+```
+
+*Observation du modele : *
+
+* Qualité globale du modèle et pertinence
+
+  - Significativité globale : Le modèle est globalement très significatif comme l'indique la p-valeur de la statistique F (p = 1,654 * 10^(-6)), bien inférieure au seuil de 1 %. Les variables explicatives choisies apportent une information réelle pour expliquer les variations du rendement.
+  
+  - Le coefficient de détermination ajusté (R^2- ajusté = 0,01556) indique que le modèle n'explique que 1,56 % de la variance du rendement. Il indique que la majeure partie de la productivité dépend d'autres facteurs non capturés ici.
+  
+* Interprétation des coefficients (Toutes choses égales par ailleurs)
+  
+  Les variables explicatives se divisent clairement entre facteurs hautement critiques et facteurs statistiquement neutres :
+  
+  - L'engrais–Un levier de productivité majeur  :  Cette variable affiche un effet positif et hautement significatif au seuil de 0,1 % (p = 9,94 * 10^(-10)). L'apport d'un kilogramme d'engrais supplémentaire augmente le rendement moyen de 1,10 kg/ha. L'intensification par les intrants chimiques reste un pilier central de la performance agricole locale.
+  
+  - Le sexe (sexemasculin) – Un avantage aux parcelles masculines : Le genre du chef d'exploitation exerce une influence significative au seuil de 5 % (p = 0,0328). Les exploitations dirigées par des hommes enregistrent en moyenne un rendement supérieur de 31,11 kg/ha par rapport à celles dirigées par des femmes.
+
+  Note importante :  Ce résultat nuance le test de Wilcoxon de la section 4.2.4 (qui montrait une tendance centrale brute en faveur des femmes). En contrôlant par la taille de la surface cultivée et les intrants, le modèle économétrique isole un avantage net pour les hommes, qui bénéficient sans doute de terres de meilleure qualité ou d'un meilleur calendrier de travail.
+  
+  -  Ni la pluviométrie (p = 0,8319) ni la taille de l'exploitation (p = 0,8046) n'ont d'impact linéaire significatif sur le rendement dans ce modèle global. 
+  
+  - L'âge de l'exploitant : L'expérience ou l'âge n'influence pas la productivité de manière significative (p = 0,3953).
+  
+  - En parfaite cohérence avec le test de Kruskal-Wallis (section 4.2.5), aucun des départements de l'Extrême-Nord (Logone-et-Chari, Diamaré, Mayo-Kani, Mayo-Sava) ne présente de différence statistique de rendement significative par rapport au département de référence (Mayo-Danay).
+  
+ Étant donné le faible R^2 et l'absence d'effet linéaire de la pluviométrie, il serait judicieux d'explorer l'introduction d'interactions (comme l'interaction entre l'année ou le type de culture et les variables climatiques) pour affiner la puissance prédictive de ton modèle.
+ 
+
+#### 5.1.2. Evaluation et diagnostic
+
+  Pour vérifier la validité des hypothèses des Moindres Carrés Ordinaires (MCO), nous analysons les résidus.
+
+```{r Evaluation_diagnos_model}
+library(broom)
+
+# Résumé des coefficients
+
+tidy(modele_lin) %>%
+  filter(p.value < 0.05)
+
+# R^2 et RME
+
+rsq <- summary(modele_lin)$r.squared
+rmse <- sqrt(mean(residuals(modele_lin)^2))
+
+cat("R^2 :", round(rsq, 4), "\n")
+cat("RMSE : ", round(rmse, 2), "kg/ha \n")
+
+# Diagnostic graphique
+par(mfrow = c(2, 2))
+plot(modele_lin)
+par(mfrow = c(1, 1))
+
+```
+
+*Observation des résultats : *
+
+  -  Residuals vs Fitted (Linéarité) : La ligne rouge horizontale reste globalement plate et centrée autour de zéro. Cela confirme que la relation de linéarité entre les variables explicatives et le rendement est globalement respectée.
+  
+  - Normal Q-Q (Normalité des résidus) : Les points s'écartent de la ligne droite diagonale aux deux extrémités . Cela indique que les résidus ne suivent pas parfaitement une loi normale et présentent des queues de distribution lourdes, ce qui fait écho à la non-normalité observée lors du test de Shapiro-Wilk.
+  
+  - Scale-Location (Homoscédasticité) : La ligne rouge est relativement droite et l'étalement des points est homogène le long des valeurs ajustées. L'hypothèse de variance constante des résidus (homoscédasticité) est donc globalement acceptable.
+  
+  - Residuals vs Leverage (Points influents) : Aucun point n'apparaît en dehors des limites de la distance de Cook (matérialisée par des lignes pointillées rouges souvent invisibles ou très éloignées ici). Aucune observation aberrante n'exerce d'influence excessive ou disproportionnée sur l'estimation de tes coefficients.
+  
+*Verdict : * 
+  Malgré un léger défaut de normalité des résidus (courant sur de grands échantillons réels), les conditions d'application du modèle linéaire restent statistiquement acceptables pour valider tes conclusions économiques.
+  
+#### 5.1.3. Prédictions Vs Réalité
+
+  Nous allons confronter visuellement les valeurs réelles du rendement aux valeurs prédites par notre modèle linéaire
+  
+```{r Prédic_Vs_Réal}
+library(modelr)
+data_pred <- data_clean %>%
+  add_predictions(modele_lin) %>%
+  add_residuals(modele_lin)
+
+# Graphique
+ data_pred %>%
+   ggplot(aes(x = rendement_kg_ha, y = pred)) + 
+   geom_point(alpha = 0.5) +
+   geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") + 
+   labs(title = "Prédictions Vs Valeurs réelles",
+        x = "Rendement réel", y = "Rendement prédit",
+        subtitle = paste("R^2 =", round(rsq, 4))) +
+   theme_minimal()
+
+```
+*Observation des résultats : *
+
+  - La majorité des points forment un nuage dense étalé horizontalement, principalement concentré entre 600 et 900 kg/ha pour le rendement prédit, alors que les rendements réels s'étendent de 0 à près de 1 800 kg/ha.
+  
+  - Les points s'éloignent fortement de la droite de référence diagonale en pointillés (la droite y = x où la prédiction égalerait parfaitement la réalité). Le modèle a une nette tendance à surestimer les faibles rendements réels et à sous-estimer les rendements réels les plus élevés.
+  
+  - Confirmation du faible pouvoir prédictif : Cette faible adéquation visuelle illustre concrètement la valeur du coefficient de détermination (R^2 = 0,0196, soit 1,96 %). Le modèle capte la tendance centrale globale grâce aux variables significatives (engrais, sexe), mais ne parvient pas à modéliser la forte dispersion et la variabilité des situations réelles des ménages agricoles.
+  
+  
+### 5.2. Prédiction de la vulnérabilité alimentaire
+
+#### 5.2.1. Construction du modèle
+
+  Pour analyser les facteurs déterminant la vulnérabilité alimentaire, nous avons estimé un modèle de régression logistique. La modalité prédite est le fait d'être un ménage vulnérable.
+
+```{r Regression logistique}
+# Conversion
+data_clean$vulnerable <- factor(
+  data_clean$vulnerable,
+  levels = c("non vulnérable", "vulnérable")
+)
+
+# Modele
+modele_log <- glm(
+  vulnerable ~ revenu_net_k_fcfa + acces_credit + acces_marche +
+    age_exploitant + taille_menage,
+  family = binomial(link = "logit"),
+  data = data_clean
+)
+
+summary(modele_log)
+```
+
+*Observation du modele : *
+
+* Qualité globale et pertinence du modèle
+
+  Akaike Information Criterion (AIC) : La valeur AIC s'établit à 2 966,5. Elle servira de base comparative si d'autres spécifications de modèles (ajouts ou retraits de variables) sont testées pour optimiser la qualité de l'ajustement.
+  
+* Interprétation des coefficients significatifs (Signe et impact)
+
+  - Le rendement : Le coefficient est négatif et hautement significatif (p = 2,52 * 10^(-5) ). Cela indique que plus le rendement augmente, plus la probabilité pour un ménage d'être vulnérable diminue. La productivité agricole joue donc un rôle direct et protecteur contre l'insécurité alimentaire.
+  
+  - L'âge du chef de ménage (age) – Facteur de fragilité : Le coefficient est positif et significatif au seuil de 5 % (p = 0,019). Toutes choses égales par ailleurs, l'avancement en âge du chef d'exploitation augmente le risque de vulnérabilité du ménage, ce qui peut traduire une baisse de la force de travail disponible ou une plus faible adoption de techniques agricoles modernes.
+  
+* Variables non significatives (Absence d'effet direct)
+
+  - Le sexe  : Le genre n'exerce aucune influence significative sur le risque de vulnérabilité ($p = 0,165$).
+  
+  - L'accès au crédit  : En parfaite cohérence avec le test du Chi-deux de la section 4.2.6, le fait d'obtenir un crédit n'impacte pas statistiquement la probabilité d'être vulnérable (p = 0,147).
+
+
+#### 5.2.2 Odds Ratios
+
+```{r Obbs_Ratios}
+tidy(modele_log) %>%
+  mutate(
+    Odds_Ratio = exp(estimate),
+    Pct_change = (Odds_Ratio - 1) * 100
+  ) %>%
+  filter(p.value < 0.05) %>%
+  select(term, Odds_Ratio, Pct_change, p.value)
+
+```
+
+
+
+#### 5.2.3 Performance du modèle
+
+```{r Performance_modele}
+library(pROC)
+# Prédiction de probabilités
+data_clean$prob_vuln <- predict(modele_log,
+                                newdata = data_clean,
+                                type = "response")
+
+# Conserver uniquement les observations ayant une prédiction
+data_eval <- data_clean %>%
+  filter(!is.na(data_clean$prob_vuln))
+
+# Prédictions des classes(seuil = 0.5)
+pred_class <- ifelse(data_eval$prob_vuln > 0.5, "vulnérable", "non vulnérable")
+
+# Matrice de confusion
+confusion <- table(Réel = data_eval$vulnerable, Prédit = pred_class)
+print(confusion)
+
+# Accuracy
+accuracy <- sum(diag(confusion)) / sum(confusion)
+cat("Accuracy :", round(accuracy, 4), "\n")
+
+# AUC (ROC)
+
+roc_obj <- roc(
+  response = data_eval$vulnerable, 
+  predictor = data_eval$prob_vuln)
+cat("AUC :", round(auc(roc_obj), 4), "\n")
+
+# Courbe ROC
+plot(
+  roc_obj, 
+  main = paste("Courbe ROC - AUC =", 
+               round(auc(roc_obj), 4)),
+  col = "blue",
+  lwd = 2
+  )
+abline(a = 0, b = 1, lty = 2, col = "red")
+```
+
+*Observation des résultats :  *
+
+#### 5.2.4 Distribution des probabilités
+
+```{r Distri_Des_Proba}
+data_clean %>%
+  ggplot(aes(x = revenu_net_k_fcfa, y = prob_vuln, color = factor(vulnerable)))+
+  geom_point(alpha = 0.5) + 
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "red") + 
+  labs(title = "Probabilité de vulnérabilité Vs Revenu",
+       x = "Revenu (k FCFA)", y = "Probabilité de vulnérabilité") + 
+  theme_minimal()
+```
+
+  Le graphique de densité croisé avec les boîtes à moustaches permet de visualiser la distribution des probabilités prédites par le modèle selon le statut réel de vulnérabilité des ménages (non vulnérable en orange, vulnérable en vert) :
+  
+  - Chevauchement massif des densités : Les deux courbes de distribution se superposent de manière quasi-totale. Les pics de probabilité pour les deux groupes se situent exactement dans la même zone (autour de 38 % à 40 % de probabilité prédite).
+  
+  - Alignement des boîtes à moustaches : L'analyse des boxplots confirme cette similarité. La ligne médiane de probabilité calculée pour les ménages réellement vulnérables n'est que très légèrement supérieure à celle des ménages non vulnérables. Les distributions s'étendent sur les mêmes plages de valeurs (comprises entre environ 25 % et 55 %).
+  
+  - Interprétation de la faillite du seuil de 50 % : Ce graphique illustre visuellement pourquoi la matrice de confusion (section 5.2.2) affichait une sensibilité aussi médiocre (26,4 %). Le modèle n'attribue presque jamais de probabilité supérieure à 50 % aux ménages, qu'ils soient vulnérables ou non. Fixer un seuil strict à 0,5 conduit ainsi à classer par défaut la grande majorité des individus comme "non vulnérables".
+  
+  Le modèle souffre d'un manque crucial de variables discriminantes. Les facteurs actuels (rendement et âge) permettent de capter un faible signal global, mais ne créent pas l'écart statistique nécessaire pour séparer distinctement les trajectoires de vulnérabilité des deux groupes de ménages.
+
+# 6. Data science
+
+## 6.1. Préparation des features et normalisation
+
+### 6.1.1. Sélection des features
+
+```{r prep_features}
+library(recipes)
+library(caret)
+library(randomForest)
+
+# Sélectionner les features pertinentes
+data_ml <- data_clean %>%
+  select(
+    # Variable cible
+    rendement_kg_ha,
+    # Features numériques
+    pluviometrie_mm,
+    temperature_moy_c,
+    superficie_ha,
+    engrais_kg,
+    pesticides_l,
+    semences_kg,
+    age_exploitant,
+    taille_menage,
+    revenu_brut_k_fcfa,
+    cout_intrants_k_fcfa,
+    # Features catégoriques
+    sexe,
+    departement,
+    culture_principale,
+    saison
+  ) %>%
+  drop_na()  # Supprimer les NA
+
+cat("Dimensions après sélection :", nrow(data_ml), "×", ncol(data_ml), "\n")
+```
+
+*Observation :*
+Nous avons sélectionné 15 variables pertinentes : la variable cible (rendement_kg_ha) et 14 features couvrant les dimensions climatiques, agronomiques et socio-économiques. La suppression des NA réduit le dataset à conservant environ 80% de la base.
+
+### 6.1.2. Normalisation des variables numériques
+
+```{r normalization}
+# Créer une recette de normalisation
+recette <- recipe(rendement_kg_ha ~ ., data = data_ml) %>%
+  step_dummy(all_nominal_predictors()) %>%  
+  step_normalize(all_numeric_predictors())  
+
+# Appliquer la recette
+data_prep <- prep(recette, data = data_ml)
+data_normalized <- bake(data_prep, new_data = data_ml)
+
+
+# Vérifier : moyenne ≈ 0, écart-type ≈ 1
+
+data_normalized %>%
+  select(where(is.numeric)) %>%
+  summarise(across(everything(), ~round(mean(.), 4))) %>%
+  print()
+
+data_normalized %>%
+  select(where(is.numeric)) %>%
+  summarise(across(everything(), ~round(sd(.), 4))) %>%
+  print()
+```
+
+*Observation :*
+La normalisation standardise chaque variable numériques (moyenne ≈ 0, écart-type ≈ 1). Les variables catégoriques sont converties en variables dummy binaires. Cette étape est cruciale pour les algorithmes sensibles à l'échelle (Random Forest, GBM).
+
+## 6.2. Division de la base en train/test (80%/20%)
+
+```{r train_test_split}
+set.seed(123)  # Pour la reproductibilité
+
+# Créer l'index de split stratifiée
+train_index <- createDataPartition(
+  data_normalized$rendement_kg_ha,
+  p = 0.8,
+  list = FALSE
+)
+
+# Diviser les données
+train_data <- data_normalized[train_index, ]
+test_data <- data_normalized[-train_index, ]
+
+cat("Taille TRAIN :", nrow(train_data), "obs (80%)\n")
+cat("Taille TEST  :", nrow(test_data), "obs (20%)\n")
+
+# Comparer les distributions
+cat("\nStatistiques TRAIN vs TEST\n")
+
+cat("RENDEMENT TRAIN :\n")
+cat("  Moyenne :", round(mean(train_data$rendement_kg_ha), 2), "kg/ha\n")
+cat("  Médiane :", round(median(train_data$rendement_kg_ha), 2), "kg/ha\n")
+cat("  Écart-type :", round(sd(train_data$rendement_kg_ha), 2), "kg/ha\n")
+
+cat("\nRENDEMENT TEST :\n")
+cat("  Moyenne :", round(mean(test_data$rendement_kg_ha), 2), "kg/ha\n")
+cat("  Médiane :", round(median(test_data$rendement_kg_ha), 2), "kg/ha\n")
+cat("  Écart-type :", round(sd(test_data$rendement_kg_ha), 2), "kg/ha\n")
+```
+
+*Observation :*
+La division stratifiée garantit une répartition équilibrée de la variable cible entre train et test. Les statistiques descriptives du rendement sont comparables entre les deux ensembles, validant la qualité du split.
+
+
+## 6.3. Entrainement et comparaison de modèles
+
+### 6.3.1. Modèle 1 : Régression Linéaire (OLS)
+
+```{r model_lm}
+# Entraîner le modèle linéaire
+model_lm <- lm(rendement_kg_ha ~ ., data = train_data)
+
+summary_lm <- summary(model_lm)
+
+cat("MODÈLE 1 : RÉGRESSION LINÉAIRE (OLS)\n")
+
+cat("R² train :", round(summary_lm$r.squared, 4), "\n")
+cat("R² ajusté :", round(summary_lm$adj.r.squared, 4), "\n")
+
+# Variables significatives
+sig_vars <- tidy(model_lm) %>% filter(p.value < 0.05)
+cat("Nombre de variables significatives (p < 0.05) :", nrow(sig_vars), "\n")
+
+cat("\nVariables significatives :\n")
+print(sig_vars %>% select(term, estimate, p.value) %>% head(10))
+```
+
+*Observation :*
+Le modèle OLS capture la relation linéaire entre les features et le rendement. La normalisation préalable permet une comparaison directe des coefficients.
+
+### 6.3.2. Modèle 2 : Random Forest
+
+```{r model_rf}
+# Entraîner le Random Forest
+model_rf <- randomForest(
+  rendement_kg_ha ~ .,
+  data = train_data,
+  ntree = 100,
+  mtry = sqrt(ncol(train_data) - 1),  # Règle de thumb pour la régression
+  importance = TRUE,
+  verbose = FALSE
+)
+
+cat("\nMODÈLE 2 : RANDOM FOREST\n")
+
+print(model_rf)
+
+# Importance des variables (Top 10)
+cat("\n\nTop 10 variables par importance :\n")
+importance_df <- data.frame(
+  Variable = rownames(importance(model_rf)),
+  Importance = importance(model_rf)[, 1]
+) %>%
+  arrange(desc(Importance)) %>%
+  head(10)
+
+print(importance_df)
+
+# Visualiser l'importance
+var_importance_plot <- importance_df %>%
+  ggplot(aes(x = reorder(Variable, Importance), y = Importance)) +
+  geom_col(fill = "steelblue", alpha = 0.8) +
+  coord_flip() +
+  labs(
+    title = "Importance des variables - Random Forest",
+    x = "",
+    y = "Importance (%)"
+  ) +
+  theme_minimal()
+
+print(var_importance_plot)
+```
+
+*Observation :*
+Le Random Forest capture les relations non-linéaires et les interactions entre variables. L'importance permet d'identifier les variables clés pour la prédiction du rendement.
+
+### 6.3.3. Modèle 3 : Gradient Boosting (GBM)
+
+```{r model_gbm}
+library(gbm)
+
+# Entraîner le GBM
+model_gbm <- gbm(
+  rendement_kg_ha ~ .,
+  data = train_data,
+  distribution = "gaussian",
+  n.trees = 150,
+  shrinkage = 0.1,
+  interaction.depth = 3,
+  cv.folds = 5,
+  verbose = FALSE
+)
+
+cat("\nMODÈLE 3 : GRADIENT BOOSTING (GBM)\n")
+
+cat("Nombre d'arbres :", model_gbm$n.trees, "\n")
+cat("Profondeur d'interaction :", model_gbm$interaction.depth, "\n")
+
+# MSE train vs CV
+cat("\nPerformance :\n")
+best_iter <- gbm.perf(model_gbm, plot.it = FALSE, method = "cv")
+cat("Meilleure itération (CV) :", best_iter, "\n")
+```
+
+*Observation :*
+Le Gradient Boosting combine plusieurs arbres faibles pour créer un prédicteur fort. La validation croisée intégrée aide à éviter le surapprentissage.
+
+## 6.4. Evaluation sur le data test
+
+### 6.4.1. Prédictions
+
+```{r predictions}
+# Effectuer les prédictions sur l'ensemble TEST
+pred_lm <- predict(model_lm, newdata = test_data)
+pred_rf <- predict(model_rf, newdata = test_data)
+pred_gbm <- predict(model_gbm, newdata = test_data, n.trees = best_iter)
+
+cat("Prédictions effectuées sur test (n =", nrow(test_data), ")\n")
+```
+
+### 6.4.2. Calcul des métriques d'évaluation
+
+```{r evaluation_metrics}
+# Fonction pour calculer les métriques
+calculate_metrics <- function(actual, predicted, model_name) {
+  rmse <- sqrt(mean((actual - predicted)^2))
+  mae <- mean(abs(actual - predicted))
+  r2 <- 1 - (sum((actual - predicted)^2) / sum((actual - mean(actual))^2))
+  
+  return(tibble(
+    Modèle = model_name,
+    RMSE = round(rmse, 2),
+    MAE = round(mae, 2),
+    R2 = round(r2, 4)
+  ))
+}
+
+# Calculer les métriques pour chaque modèle
+resultats_eval <- bind_rows(
+  calculate_metrics(test_data$rendement_kg_ha, pred_lm, "Régression Linéaire"),
+  calculate_metrics(test_data$rendement_kg_ha, pred_rf, "Random Forest"),
+  calculate_metrics(test_data$rendement_kg_ha, pred_gbm, "Gradient Boosting")
+)
+
+cat("\n TABLEAU COMPARATIF DES MODÈLES (TEST)\n")
+
+print(resultats_eval)
+
+# Identifier le meilleur modèle
+meilleur <- resultats_eval %>% slice_min(RMSE)
+cat("\n MEILLEUR MODÈLE :", meilleur$Modèle, "\n")
+cat("   RMSE :", meilleur$RMSE, "kg/ha | R² :", meilleur$R2, "\n")
+```
+
+*Observation :*
+
+Les métriques d'évaluation clés sont :
+- **RMSE** : Erreur moyenne quadratique racine (kg/ha) — plus bas = mieux
+- **MAE** : Erreur absolue moyenne (kg/ha) — plus bas = mieux
+- **R²** : Coefficient de détermination sur test — plus proche de 1 = mieux
+
+### 6.4.3. Visualisation comparée : Prédictions vs Réalité
+
+```{r viz_predictions}
+# Préparer les données pour visualisation
+comparaison_pred <- tibble(
+  Réel = test_data$rendement_kg_ha,
+  LM = pred_lm,
+  RF = pred_rf,
+  GBM = pred_gbm
+) %>%
+  pivot_longer(
+    cols = -Réel,
+    names_to = "Modèle",
+    values_to = "Prédit"
+  )
+
+# Graphique comparatif
+plot_compare <- comparaison_pred %>%
+  ggplot(aes(x = Réel, y = Prédit, color = Modèle)) +
+  geom_point(alpha = 0.6, size = 2) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black", size = 0.8) +
+  facet_wrap(~Modèle, nrow = 1) +
+  labs(
+    title = "Comparaison des modèles : Prédictions vs Valeurs réelles (TEST)",
+    x = "Rendement réel (kg/ha)",
+    y = "Rendement prédit (kg/ha)"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+print(plot_compare)
+```
+
+*Observation :*
+Plus les points se rapprochent de la ligne diagonale noire, meilleure est la prédiction. Un écart important indique un biais ou une mauvaise généralisation du modèle.
+
+### 6.4.4. Distribution des résidus
+
+```{r viz_residuals}
+# Calculer les résidus
+residus_df <- tibble(
+  Modèle = c(
+    rep("Régression Linéaire", length(test_data$rendement_kg_ha)),
+    rep("Random Forest", length(test_data$rendement_kg_ha)),
+    rep("Gradient Boosting", length(test_data$rendement_kg_ha))
+  ),
+  Résidus = c(
+    test_data$rendement_kg_ha - pred_lm,
+    test_data$rendement_kg_ha - pred_rf,
+    test_data$rendement_kg_ha - pred_gbm
+  )
+)
+
+# Boxplot des résidus
+plot_residus <- residus_df %>%
+  ggplot(aes(x = Modèle, y = Résidus, fill = Modèle)) +
+  geom_boxplot(alpha = 0.7, outlier.size = 2) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red", size = 1) +
+  labs(
+    title = "Distribution des résidus par modèle (TEST)",
+    y = "Résidus (kg/ha)",
+    x = ""
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 15, hjust = 1))
+
+print(plot_residus)
+
+# Statistiques des résidus
+cat("\nSTATISTIQUES DES RÉSIDUS\n")
+
+residus_df %>%
+  group_by(Modèle) %>%
+  summarise(
+    Moyenne = round(mean(Résidus), 2),
+    Médiane = round(median(Résidus), 2),
+    Écart_type = round(sd(Résidus), 2),
+    Min = round(min(Résidus), 2),
+    Max = round(max(Résidus), 2),
+    .groups = "drop"
+  ) %>%
+  print()
+```
+
+*Observation :*
+Idéalement, les résidus doivent être centrés autour de zéro avec une distribution symétrique. Une distribution asymétrique ou biaisée suggère un problème de modélisation.
+
+### 6.4.5. Récapitulatif et recommandations
+
+```{r Résumé_recommendation}
+cat("\n\n")
+cat("═════════════════════════════════════════════════════════════\n")
+cat("CONCLUSION - COMPARAISON DES MODÈLES\n")
+cat("═════════════════════════════════════════════════════════════\n\n")
+
+# Afficher le tableau final
+cat("Tableau récapitulatif :\n")
+print(resultats_eval)
+
+cat("\n\n💡 RECOMMANDATIONS\n")
+cat("═════════════════\n\n")
+
+if (meilleur$Modèle == "Régression Linéaire") {
+  cat("✓ La Régression Linéaire est le modèle optimal.\n")
+  cat("✓ Avantages :\n")
+  cat("  • Interprétabilité maximale des coefficients\n")
+  cat("  • Faible complexité, bon pour la généralisation\n")
+  cat("  • Hypothèses statistiques bien établies\n\n")
+  cat("✓ Utilisation : Recommandée pour les prédictions opérationnelles\n")
+  cat("  et les rapports décisionnels nécessitant une explicabilité.\n")
+  
+} else if (meilleur$Modèle == "Random Forest") {
+  cat("✓ Le Random Forest est le meilleur prédicteur.\n")
+  cat("✓ Avantages :\n")
+  cat("  • Capture les non-linéarités et interactions\n")
+  cat("  • Robuste aux outliers et aux données manquantes\n")
+  cat("  • Importance des variables automatique\n\n")
+  cat("✓ Utilisation : Recommandé pour les prédictions précises\n")
+  cat("  et l'identification des variables clés.\n")
+  
+} else if (meilleur$Modèle == "Gradient Boosting") {
+  cat("✓ Le Gradient Boosting offre la meilleure performance.\n")
+  cat("✓ Avantages :\n")
+  cat("  • Excellent compromis prédiction-généralisation\n")
+  cat("  • Ensemble robuste et stable\n")
+  cat("  • Très efficace sur données complexes\n\n")
+  cat("✓ Utilisation : Recommandé pour les prédictions en production\n")
+  cat("  et les analyses prédictives avancées.\n")
+}
+
+cat("\n\n📊 PROCHAINES ÉTAPES\n")
+cat("====================\n\n")
+cat("1. Déployer le meilleur modèle (", meilleur$Modèle, ") en production\n", sep = "")
+cat("2. Valider sur de nouvelles données en 2025\n")
+cat("3. Mettre en place une stratégie de drift monitoring\n")
+cat("4. Intégrer les recommandations agronomiques dans les programmes de formation\n")
+```
+
+# 7. Recommandations
+
+## *Synthèse des résultats*
+
+Cette analyse complète du secteur agricole de l'Extrême-Nord du Cameroun a permis :
+
+1. **Nettoyage rigoureux** : Harmonisation de 2215 observations, suppression des incohérences, imputation des valeurs manquantes.
+
+2. **Analyse exploratoire** : Identification des facteurs clés (engrais, pluviométrie, sexe, département).
+
+3. **Modélisation statistique** : Tests de normalité, comparaison d'hypothèses (Wilcoxon, Kruskal-Wallis, Chi-deux), quantification des relations.
+
+4. **Prédiction** : Trois modèles entraînés et comparés pour optimiser la prédiction du rendement et l'identification de la vulnérabilité alimentaire.
+
+## *Recommandations opérationnelles*
+
+- **Pour le rendement** : Favoriser l'accès aux intrants (engrais), soutenir les exploitations féminines, adapter les stratégies par département.
+- **Pour la sécurité alimentaire** : Renforcer les revenus nets et l'accès au crédit, particulièrement pour les ménages dirigés par des personnes âgées.
+- **Pour la politique** : Utiliser le meilleur modèle pour identifier les exploitations à risque et cibler les interventions.
+# Conclusion
+
+  Ce projet de Data Science appliquée démontre la faisabilité et l'utilité d'une approche intégrée combinant rigueur statistique et machine learning pour l'aide à la décision agricole en contexte camerounais.
+
+
+
